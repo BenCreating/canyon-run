@@ -15,7 +15,7 @@
 	// if the browser can not create an audio context outside of a user gesture (e.g. on iOS), p8_autoplay has no effect
 	var p8_autoplay = false;
 
-	// When pico8_state is defined, PICO-8 will set .is_paused, .sound_volume and .frame_number each frame 
+	// When pico8_state is defined, PICO-8 will set .is_paused, .sound_volume and .frame_number each frame
 	// (used for determining button icons)
 	var pico8_state = [];
 
@@ -78,7 +78,7 @@
 			return;
 		}
 		var is_fullscreen=(document.fullscreenElement || document.mozFullScreenElement || document.webkitIsFullScreen || document.msFullscreenElement);
-		
+
 		// hash based on: pico8_state.sound_volume  pico8_state.is_paused bottom_margin left is_fullscreen p8_touch_detected
 		var hash = 0;
 		hash = pico8_state.sound_volume;
@@ -91,7 +91,7 @@
 			requestAnimationFrame(p8_update_button_icons);
 			return;
 		}
-		
+
 		p8_buttons_hash = hash;
 		// console.log("@@ updating button icons");
 
@@ -99,7 +99,7 @@
 		for (i = 0; i < els.length; i++)
 		{
 			el = els[i];
-			index = el.id;			
+			index = el.id;
 			if (index == 'p8b_sound') index += (pico8_state.sound_volume == 0 ? "0" : "1"); // 1 if undefined
 			if (index == 'p8b_pause') index += (pico8_state.is_paused > 0 ? "1" : "0");     // 0 if undefined
 
@@ -111,7 +111,7 @@
 
 
 			// hide all buttons for touch mode (can pause with menu buttons)
-			
+
 			var is_visible = p8_is_running;
 
 			if ((!p8_touch_detected || !p8_allow_mobile_menu) && el.parentElement.id == "p8_menu_buttons_touch")
@@ -120,7 +120,7 @@
 			if (p8_touch_detected && el.parentElement.id == "p8_menu_buttons")
 				is_visible = false;
 
-			if (is_fullscreen) 
+			if (is_fullscreen)
 				is_visible = false;
 
 			if (is_visible)
@@ -137,19 +137,19 @@
 	{
 		return x < 0 ? -x : x;
 	}
-	
+
 	// step 0 down 1 drag 2 up (not used)
 	function pico8_buttons_event(e, step)
 	{
 		if (!p8_is_running) return;
-	
+
 		pico8_buttons[0] = 0;
 
 		if (step == 2 && typeof(pico8_mouse) !== 'undefined')
 		{
 			pico8_mouse[2] = 0;
 		}
-		
+
 		var num = 0;
 		if (e.touches) num = e.touches.length;
 
@@ -159,7 +159,7 @@
 			pico8_mouse[2] = 0;
 		}
 
-		
+
 		for (var i = 0; i < num; i++)
 		{
 			var touch = e.touches[i];
@@ -197,7 +197,7 @@
 
 
 			// buttons
-			
+
 			b = 0;
 
 			if (y < h - r*8)
@@ -212,7 +212,7 @@
 				{
 					// menu button: half as high as X O button
 					// stretch across right-hand half above X O buttons
-					if (x > w - r*3) 
+					if (x > w - r*3)
 						b |= 0x40;
 				}
 				else if (x < w/2 && x < r*6)
@@ -227,7 +227,7 @@
 					var dx = x - cx;
 					var dy = y - cy;
 
-					if (abs(dx) > abs(dy) * 0.6) // horizontal 
+					if (abs(dx) > abs(dy) * 0.6) // horizontal
 					{
 						if (dx < -deadzone) b |= 0x1;
 						if (dx > deadzone) b |= 0x2;
@@ -241,9 +241,9 @@
 				else if (x > w - r*6)
 				{
 					// button; diagonal split from bottom right corner
-				
+
 					mask = 0x30;
-					
+
 					// one or both of [X], [O]
 					if ( (h-y) > (w-x) * 0.8) b |= 0x10;
 					if ( (w-x) > (h-y) * 0.8) b |= 0x20;
@@ -251,7 +251,7 @@
 			}
 
 			pico8_buttons[0] |= b;
-		
+
 		}
 	}
 
@@ -281,7 +281,7 @@
 		p8_layout_frames ++;
 
 		// assumes frame doesn't have padding
-		
+
 		var is_fullscreen=(document.fullscreenElement || document.mozFullScreenElement || document.webkitIsFullScreen || document.msFullscreenElement);
 		var frame_width = p8_frame.offsetWidth;
 		var frame_height = p8_frame.offsetHeight;
@@ -317,9 +317,9 @@
 
 		// csize should never be higher than parent frame
 		// (otherwise stretched large when fullscreen and then return)
-		if (!is_fullscreen && p8_frame) 
+		if (!is_fullscreen && p8_frame)
 			csize = Math.min(csize, last_windowed_container_height); // p8_frame_0 parent
-		
+
 
 		if (is_fullscreen)
 		{
@@ -368,7 +368,7 @@
 		// record this for returning to original size after fullscreen pushes out container height (argh)
 		if (!is_fullscreen && p8_frame)
 			last_windowed_container_height = p8_frame.parentNode.parentNode.offsetHeight;
-		
+
 
 		// mobile in portrait mode: put screen at top (w / a little extra space for fullscreen button if needed)
 		// (don't cart too about buttons overlapping screen)
@@ -402,7 +402,7 @@
 			p8_container.style.marginTop = "0px";
 
 			// buttons
-			
+
 			// same as touch event handling
 			var w = window.innerWidth;
 			var h = window.innerHeight;
@@ -425,7 +425,7 @@
 			el.style.height = r*6;
 			if (el.getAttribute("src") != p8_gfx_dat["controls_left_panel"]) // optimisation: avoid reload? (browser should handle though)
 				el.setAttribute("src", p8_gfx_dat["controls_left_panel"]);
-			
+
 			// scroll to cart (need to stop running with X)
 			p8_frame.scrollIntoView(true);
 
@@ -466,18 +466,18 @@
 
 	function p8_create_audio_context()
 	{
-		if (pico8_audio_context) 
+		if (pico8_audio_context)
 		{
 			try {
 				pico8_audio_context.resume();
 			}
 			catch(err) {
 				console.log("** pico8_audio_context.resume() failed");
-			}	
+			}
 			return;
 		}
 
-		var webAudioAPI = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.oAudioContext || window.msAudioContext;			
+		var webAudioAPI = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.oAudioContext || window.msAudioContext;
 		if (webAudioAPI)
 		{
 			pico8_audio_context = new webAudioAPI;
@@ -489,7 +489,7 @@
 					var dummy_source_sfx = pico8_audio_context.createBufferSource();
 					dummy_source_sfx.buffer = pico8_audio_context.createBuffer(1, 1, 22050); // dummy
 					dummy_source_sfx.connect(pico8_audio_context.destination);
-					dummy_source_sfx.start(1, 0.25); // gives InvalidStateError -- why? hasn't been played before 
+					dummy_source_sfx.start(1, 0.25); // gives InvalidStateError -- why? hasn't been played before
 					//dummy_source_sfx.noteOn(0); // deleteme
 				}
 				catch(err) {
@@ -501,7 +501,7 @@
 
 	function p8_close_cart()
 	{
-		// just reload page! used for touch buttons -- hard to roll back state 
+		// just reload page! used for touch buttons -- hard to roll back state
 		window.location.hash = ""; // triggers reload
 	}
 
@@ -525,7 +525,7 @@
 			}
 		}
 
-		// create audio context and wake it up (for iOS -- needs happen inside touch event)		
+		// create audio context and wake it up (for iOS -- needs happen inside touch event)
 		p8_create_audio_context();
 
 		// show touch elements
@@ -545,7 +545,7 @@
 		e = document.createElement("script");
 		p8_script = e;
 		e.onload = function(){
-			
+
 			// show canvas / menu buttons only after loading
 			el = document.getElementById("p8_playarea");
 			if (el) el.style.display="table";
@@ -560,7 +560,7 @@
 		e.type = "application/javascript";
 		e.src = "canyon_run.js";
 		e.id = "e_script";
-		
+
 		document.body.appendChild(e); // load and run
 
 		// hide start button and show canvas / menu buttons. hide start button
@@ -568,7 +568,7 @@
 		if (el) el.style.display="none";
 
 		// add #playing for touchscreen devices (allows back button to close)
-		// X button can also be used to trigger this 
+		// X button can also be used to trigger this
 		if (p8_touch_detected)
 		{
 			window.location.hash = "#playing";
@@ -580,7 +580,7 @@
 		}
 	}
 
-	
+
 	// gamepad  https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API
 	// (sets bits in pico8_buttons[])
 	function p8_update_gamepads() {
@@ -662,7 +662,7 @@
 		    }
 			return;
 		}
-		
+
 		var el = document.getElementById("p8_playarea");
 
 		if ( el.requestFullscreen ) {
@@ -730,7 +730,7 @@ canvas{
 	stroke-opacity:0.7;
 	fill:none;
 }
-	
+
 #instructions{
 	width:75%;
 	margin: 50px auto;
@@ -744,16 +744,18 @@ canvas{
 <body style="padding:0px; margin:0px; background-color:#222; color:#ccc">
 <div id="body_0"> <!-- hide this when playing in mobile (p8_touch_detected) so that elements don't affect layout -->
 
-	<div id="instructions">	
-		<p>An early prototype for a game about flying through a canyon. Inspired by that one scene in every action film where the heroes out maneuver their pursuers at high speeds through treacherous terrain.</p>
 
-		<p>Controls:</p>
-		<ul>
-			<li>Z to dive beneath the archways.</li>
-			<li>Arrows to move.</p=li>
-		</ul>
-		<p>Don't drag on the ground too long or you'll explode!</p>
-	</div>
+<!-- Add any content above the cart here -->
+<div id="instructions">
+	<p>An early prototype for a game about flying through a canyon. Inspired by that one scene in every action film where the heroes out maneuver their pursuers at high speeds through treacherous terrain.</p>
+
+	<p>Controls:</p>
+	<ul>
+		<li>Z to dive beneath the archways.</li>
+		<li>Arrows to move.</p=li>
+	</ul>
+	<p>Don't drag on the ground too long or you'll explode!</p>
+</div>
 
 <div id="p8_desktop" style="display:block; position:absolute; top:10px; left:10px"></div> <!-- desktop for saving gifs / screenshots -->
 <div id="p8_frame_0" style="max-width:800px; max-height:800px; margin:auto;"> <!-- double function: limit size, and display only this div for touch devices -->
@@ -789,7 +791,7 @@ canvas{
 				<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault();" >
 				</canvas>
 				<div class=p8_menu_buttons id="p8_menu_buttons" style="margin-left:10px;">
-					<div class="p8_menu_button" style="position:absolute; bottom:125px" id="p8b_controls" onClick="p8_give_focus(); Module.pico8ToggleControlMenu();"></div>					
+					<div class="p8_menu_button" style="position:absolute; bottom:125px" id="p8b_controls" onClick="p8_give_focus(); Module.pico8ToggleControlMenu();"></div>
 					<div class="p8_menu_button" style="position:absolute; bottom:90px" id="p8b_pause" onClick="p8_give_focus(); Module.pico8TogglePaused(); p8_update_layout_hash = -22;"></div>
 					<div class="p8_menu_button" style="position:absolute; bottom:55px" id="p8b_sound" onClick="p8_give_focus(); p8_create_audio_context(); Module.pico8ToggleSound();"></div>
 					<div class="p8_menu_button" style="position:absolute; bottom:20px" id="p8b_full" onClick="p8_give_focus(); p8_request_fullscreen();"></div>
@@ -799,13 +801,13 @@ canvas{
 
 			<!-- display after first layout update -->
 			<div  id="touch_controls_gfx"
-				  style=" pointer-events:none; display:table; 
+				  style=" pointer-events:none; display:table;
 						 position:fixed; top:0px; left:0px; border:0; width:100vw; height:100vh">
 
 					<img src="" id="controls_right_panel" style="position:absolute; opacity:0.5;">
 					<img src="" id="controls_left_panel" style="position:absolute;  opacity:0.5;">
-						
-			
+
+
 			</div> <!-- touch_controls_gfx -->
 
 			<!-- used for clipboard access & keyboard input; displayed and used by PICO-8 only once needed. can be safely removed if clipboard / key presses not needed. -->
@@ -843,10 +845,15 @@ canvas{
 			}
 		};
 	}
-	
+
 </script>
+
+
+
+<!-- Add content below the cart here -->
+
+
 
 
 </div> <!-- body_0 -->
 </body></html>
-
